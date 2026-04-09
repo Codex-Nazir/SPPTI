@@ -15,25 +15,27 @@ def add_cors_headers(response):
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     return response
 
-@app.route("/check", methods=["POST", "OPTIONS"])
+@app.route("/check", methods=["POST"])
 def check():
-    # Handle preflight OPTIONS request
-    if request.method == "OPTIONS":
-        response = app.make_default_options_response()
-        return add_cors_headers(response)
-
-    # Normal POST request
     data = request.json
     url = data.get("url")
-    score, reasons = check_url(url)
-    save_scan(url, score, reasons)
 
-    return jsonify({
-        "url": url,
-        "risk_score": score,
-        "reasons": reasons
-    })
+    try:
+        # predict_url comes from ml_model.py
+        prediction, confidence = predict_url(url)
+        score = prediction  # 0 = safe, 1 = suspicious, 2 = phishing
+        reasons = [f"AI Confidence: {confidence}%"]
 
+        save_scan(url, score, reasons)
+
+        return jsonify({
+            "url": url,
+            "risk_score": score,
+            "reasons": reasons,
+            "ml_confidence": confidence  # ✅ add this
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 @app.route("/check_email", methods=["POST", "OPTIONS"])
 def check_email_route():
     if request.method == "OPTIONS":
