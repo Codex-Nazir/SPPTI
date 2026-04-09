@@ -4,7 +4,9 @@ document.addEventListener("DOMContentLoaded", function () {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         let currentUrl = tabs[0].url;
 
-        document.getElementById("url").innerText = currentUrl;
+        // Show current URL
+        let urlDisplay = document.getElementById("url");
+        urlDisplay.innerText = currentUrl;
 
         // Send to backend (Render URL)
         fetch("https://your-app-name.onrender.com/check", {
@@ -17,14 +19,21 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(res => res.json())
         .then(data => {
 
-            let result = document.getElementById("result");
+            let phishingResult = document.getElementById("phishing-result");
+            let aiResult = document.getElementById("ai-result");
 
-            // Show score
-            result.innerHTML = "Risk Score: " + data.risk_score;
+            // Show risk score
+            phishingResult.innerText = "Risk Score: " + data.risk_score;
+
+            // Show AI confidence if available
+            if (data.ml_confidence !== undefined) {
+                aiResult.innerText = "AI Confidence: " + data.ml_confidence + "%";
+            }
 
             // Danger detection
             if (data.risk_score > 1) {
-                result.style.color = "red";
+                phishingResult.style.color = "red";
+                aiResult.style.color = "red";
 
                 // ⚠️ ALERT
                 alert("⚠️ Warning: This website may be phishing!");
@@ -38,10 +47,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
             } else {
-                result.style.color = "green";
+                phishingResult.style.color = "green";
+                aiResult.style.color = "green";
             }
 
-        })
+        }) 
         .catch(err => {
             console.log("Error:", err);
         });
@@ -49,4 +59,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-
