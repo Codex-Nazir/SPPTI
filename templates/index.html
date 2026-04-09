@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SPPTI Scanner</title>
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    padding: 30px;
+}
+
+.container {
+    max-width: 700px;
+    margin: auto;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+h2, h3 {
+    color: #38bdf8;
+}
+
+input, textarea {
+    width: 90%;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    background: #22c55e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #16a34a;
+}
+
+ul {
+    text-align: left;
+}
+
+.result-box {
+    margin-top: 15px;
+    padding: 10px;
+    background: #334155;
+    border-radius: 5px;
+}
+</style>
+</head>
+<body>
+    <body>
+<div class="container">
+
+<h2>🛡️ SPPTI - Phishing Protection System</h2>
+    <input type="text" id="url" placeholder="Enter URL">
+    <button onclick="checkURL()">Check</button>
+
+    <p id="result"></p>
+    <ul id="reasons"></ul>
+<h3>Email Phishing Checker</h3>
+
+<textarea id="email" placeholder="Paste email content here" rows="6" cols="50"></textarea>
+<br>
+<button onclick="checkEmail()">Check Email</button>
+
+<p id="email_result"></p>
+<ul id="email_reasons"></ul>
+    <script>
+        function checkEmail() {
+    let email = document.getElementById("email").value;
+
+    fetch("/check_email", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({email: email})
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("email_result").innerHTML =
+            "<b>Email Risk Score:</b> " + data.risk_score;
+
+        let list = document.getElementById("email_reasons");
+        list.innerHTML = "";
+
+        data.reasons.forEach(reason => {
+            let li = document.createElement("li");
+            li.innerText = reason;
+            list.appendChild(li);
+        });
+    });
+}
+
+
+        function checkURL() {
+            let url = document.getElementById("url").value;
+
+            fetch("/check", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({url: url})
+            })
+            .then(res => res.json())
+            .then(data => {
+    // Show risk score
+    document.getElementById("result").innerHTML =
+        "<b>Risk Score:</b> " + data.risk_score;
+
+    // Show reasons as list
+    let list = document.getElementById("reasons");
+    list.innerHTML = "";
+
+    data.reasons.forEach(reason => {
+        let li = document.createElement("li");
+        li.innerText = reason;
+        list.appendChild(li);
+    });
+});
+        }
+    </script>
+</body>
+</div>
+</body>
+</html>
+

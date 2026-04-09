@@ -1,0 +1,7 @@
+flask
+scikit-learn
+joblib
+tldextract
+python-whois
+requests
+gunicorn

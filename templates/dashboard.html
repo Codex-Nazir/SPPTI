@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h2>Threat Intelligence Dashboard</h2>
+
+    <p>Total Scanned: {{ total }}</p>
+    <p>High Risk: {{ high }}</p>
+    <p>Medium Risk: {{ medium }}</p>
+    <p>Low Risk: {{ low }}</p>
+
+    <canvas id="myChart" width="400" height="200"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['High', 'Medium', 'Low'],
+                datasets: [{
+                    label: 'Threat Levels',
+                    data: [{{ high }}, {{ medium }}, {{ low }}]
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
