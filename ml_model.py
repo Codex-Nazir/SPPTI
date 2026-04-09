@@ -20,6 +20,14 @@ def extract_features(url):
 
     return np.array([[length, dots, https, special_chars, ip, subdomains]])
 
+def extract_features(text):
+    return [
+        len(text),
+        text.count("http"),
+        text.count("urgent"),
+        text.count("verify"),
+        int("@" in text)
+    ]
 
 def predict_url(url):
     features = extract_features(url)
