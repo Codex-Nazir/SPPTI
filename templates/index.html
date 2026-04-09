@@ -1,82 +1,151 @@
-<!DOCTYPE html>
+kk<!DOCTYPE html>
 <html>
 <head>
-    <title>SPPTI Scanner</title>
+    <title>SPPTI</title>
+
     <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #0f172a;
-    color: white;
-    text-align: center;
-    padding: 30px;
-}
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+        }
 
-.container {
-    max-width: 700px;
-    margin: auto;
-    background: #1e293b;
-    padding: 20px;
-    border-radius: 10px;
-}
+        /* Navbar */
+        .navbar {
+            background: #020617;
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #38bdf8;
+        }
 
-h2, h3 {
-    color: #38bdf8;
-}
+        /* Container */
+        .container {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
 
-input, textarea {
-    width: 90%;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-    border: none;
-}
+        /* Card */
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
 
-button {
-    padding: 10px 20px;
-    margin: 10px;
-    background: #22c55e;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+        h3 {
+            color: #38bdf8;
+        }
 
-button:hover {
-    background: #16a34a;
-}
+        input, textarea {
+            width: 95%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+        }
 
-ul {
-    text-align: left;
-}
+        button {
+            padding: 10px 20px;
+            background: #22c55e;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
 
-.result-box {
-    margin-top: 15px;
-    padding: 10px;
-    background: #334155;
-    border-radius: 5px;
-}
-</style>
+        button:hover {
+            background: #16a34a;
+        }
+
+        /* Result box */
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .safe {
+            background: #065f46;
+        }
+
+        .danger {
+            background: #7f1d1d;
+        }
+
+        ul {
+            margin-top: 10px;
+        }
+    </style>
 </head>
+
 <body>
-    <body>
+
+<div class="navbar">
+    🛡️ SPPTI - Cyber Threat Detection System
+</div>
+
 <div class="container">
 
-<h2>🛡️ SPPTI - Phishing Protection System</h2>
-    <input type="text" id="url" placeholder="Enter URL">
-    <button onclick="checkURL()">Check</button>
+    <!-- URL Checker -->
+    <div class="card">
+        <h3>🔗 URL Phishing Checker</h3>
+        <input type="text" id="url" placeholder="Enter URL">
+        <button onclick="checkURL()">Check URL</button>
 
-    <p id="result"></p>
-    <ul id="reasons"></ul>
-<h3>Email Phishing Checker</h3>
+        <div id="url_result" class="result"></div>
+        <ul id="reasons"></ul>
+    </div>
 
-<textarea id="email" placeholder="Paste email content here" rows="6" cols="50"></textarea>
-<br>
-<button onclick="checkEmail()">Check Email</button>
+    <!-- Email Checker -->
+    <div class="card">
+        <h3>📧 Email Phishing Checker</h3>
+        <textarea id="email" rows="5" placeholder="Paste email content"></textarea>
+        <button onclick="checkEmail()">Check Email</button>
 
-<p id="email_result"></p>
-<ul id="email_reasons"></ul>
-    <script>
-        function checkEmail() {
+        <div id="email_result" class="result"></div>
+        <ul id="email_reasons"></ul>
+    </div>
+
+</div>
+
+<script>
+function checkURL() {
+    let url = document.getElementById("url").value;
+
+    fetch("/check", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({url: url})
+    })
+    .then(res => res.json())
+    .then(data => {
+        let resultBox = document.getElementById("url_result");
+
+        if (data.risk_score > 1) {
+            resultBox.className = "result danger";
+        } else {
+            resultBox.className = "result safe";
+        }
+
+        resultBox.innerHTML = "<b>Risk Score:</b> " + data.risk_score;
+
+        let list = document.getElementById("reasons");
+        list.innerHTML = "";
+
+        data.reasons.forEach(r => {
+            let li = document.createElement("li");
+            li.innerText = r;
+            list.appendChild(li);
+        });
+    });
+}
+
+function checkEmail() {
     let email = document.getElementById("email").value;
 
     fetch("/check_email", {
@@ -86,49 +155,29 @@ ul {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById("email_result").innerHTML =
-            "<b>Email Risk Score:</b> " + data.risk_score;
+        let resultBox = document.getElementById("email_result");
+
+        if (data.risk_score > 1) {
+            resultBox.className = "result danger";
+        } else {
+            resultBox.className = "result safe";
+        }
+
+        resultBox.innerHTML = "<b>Email Risk Score:</b> " + data.risk_score;
 
         let list = document.getElementById("email_reasons");
         list.innerHTML = "";
 
-        data.reasons.forEach(reason => {
+        data.reasons.forEach(r => {
             let li = document.createElement("li");
-            li.innerText = reason;
+            li.innerText = r;
             list.appendChild(li);
         });
     });
 }
+</script>
 
-
-        function checkURL() {
-            let url = document.getElementById("url").value;
-
-            fetch("/check", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({url: url})
-            })
-            .then(res => res.json())
-            .then(data => {
-    // Show risk score
-    document.getElementById("result").innerHTML =
-        "<b>Risk Score:</b> " + data.risk_score;
-
-    // Show reasons as list
-    let list = document.getElementById("reasons");
-    list.innerHTML = "";
-
-    data.reasons.forEach(reason => {
-        let li = document.createElement("li");
-        li.innerText = reason;
-        list.appendChild(li);
-    });
-});
-        }
-    </script>
-</body>
-</div>
 </body>
 </html>
+
 
