@@ -1,3 +1,4 @@
+from ml_model import predict_url
 from flask import Flask, request, jsonify, render_template
 from email_detector import check_email
 from database import save_scan, get_all_scans
@@ -21,18 +22,16 @@ def check():
     url = data.get("url")
 
     try:
-        # predict_url comes from ml_model.py
-        prediction, confidence = predict_url(url)
-        score = prediction  # 0 = safe, 1 = suspicious, 2 = phishing
-        reasons = [f"AI Confidence: {confidence}%"]
+        # Use detector.py's check_url to get score, confidence, reasons
+        score, ml_confidence, reasons = check_url(url)
 
         save_scan(url, score, reasons)
 
         return jsonify({
             "url": url,
             "risk_score": score,
-            "reasons": reasons,
-            "ml_confidence": confidence  # ✅ add this
+            "ml_confidence": ml_confidence,  # ✅ ML confidence
+            "reasons": reasons
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500

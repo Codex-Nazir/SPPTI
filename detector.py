@@ -29,21 +29,25 @@ def check_url(url):
     except:
         reasons.append("Could not verify domain info")
 
-    # 4. ML detection ✅ (PROPERLY INSIDE FUNCTION)
+    # 4. ML detection
     prediction, confidence = predict_url(url)
 
     if prediction == 1:
         score += 1
         reasons.append(f"ML detected phishing ({confidence}% confidence)")
 
-    return score, reasons
+    # ✅ Return ML confidence as separate value
+    return score, confidence, reasons
 
 
 if __name__ == "__main__":
     url = input("Enter URL: ")
-    score, reasons = check_url(url)
+    score, confidence, reasons = check_url(url)
 
     print("\nRisk Score:", score)
+    print("ML Confidence:", confidence)
     print("Reasons:")
     for r in reasons:
         print("-", r)
+
+
