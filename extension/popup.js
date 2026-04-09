@@ -1,4 +1,4 @@
-kdocument.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     // Get current tab URL
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         let currentUrl = tabs[0].url;
