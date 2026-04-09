@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "Detect phishing websites in real-time",
   "permissions": ["tabs", "activeTab"],
-  "host_permissions": ["http://sppti.onrender.com/check"],
+  "host_permissions": ["https://sppti.onrender.com/check"],
   "action": {
     "default_popup": "popup.html"
   }

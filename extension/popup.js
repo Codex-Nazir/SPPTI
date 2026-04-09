@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify({ url: currentUrl })
         })
-        .then(res => res.json())
-        .then(data => {
+        .then(res => res.json()) // parse JSON
+        .then(data => {          // ← use 'data' here
 
             let phishingResult = document.getElementById("phishing-result");
             let aiResult = document.getElementById("ai-result");
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 aiResult.style.color = "green";
             }
 
-        }) 
+        })
         .catch(err => {
             console.log("Error:", err);
         });
