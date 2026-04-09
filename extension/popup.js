@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
         urlDisplay.innerText = currentUrl;
 
         // Send to backend (Render URL)
-        fetch("https://your-app-name.onrender.com/check", {
+        fetch("https://sppti.onrender.com/check", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
