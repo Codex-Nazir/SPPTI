@@ -157,7 +157,16 @@
         <div id="email_result" class="result"></div>
         <ul id="email_reasons"></ul>
     </div>
+  
+    <div class="card">
+    <h3>📷 QR Code Scanner</h3>
 
+    <input type="file" id="qrfile">
+    <button onclick="scanQR()">Scan QR</button>
+
+    <div id="qr_result" class="result"></div>
+    <ul id="qr_details"></ul>
+</div>
 </div>
 
 <script>
@@ -304,6 +313,45 @@ function smartReply(msg) {
 
     return "🤖 I am learning... Try asking about phishing or paste a URL.";
 }
+
+function scanQR() {
+    let fileInput = document.getElementById("qrfile");
+    let file = fileInput.files[0];
+
+    let formData = new FormData();
+    formData.append("file", file);
+
+    fetch("/scan_qr", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        let resultBox = document.getElementById("qr_result");
+        let list = document.getElementById("qr_details");
+
+        if (data.error) {
+            resultBox.innerText = data.error;
+            return;
+        }
+
+        resultBox.innerHTML = `
+            <b>Type:</b> ${data.type} <br>
+            <b>Risk:</b> ${data.risk} <br>
+            <b>Data:</b> ${data.data}
+        `;
+
+        list.innerHTML = "";
+
+        data.details.forEach(d => {
+            let li = document.createElement("li");
+            li.innerText = d;
+            list.appendChild(li);
+        });
+    });
+}
+
 
 
 </script>
