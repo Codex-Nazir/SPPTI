@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.db
+*.png
+*.save
+temp_qr.png
+venv/
