@@ -5,3 +5,6 @@ tldextract
 python-whois
 requests
 gunicorn
+pyzbar
+pillow
+opencv-python
