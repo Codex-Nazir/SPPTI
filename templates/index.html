@@ -4,6 +4,53 @@
     <title>SPPTI</title>
 
     <style>
+
+#chatbot-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #22c55e;
+    color: white;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#chatbot-box {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    background: #1e293b;
+    border-radius: 10px;
+    display: none;
+    flex-direction: column;
+}
+
+#chat-header {
+    background: #020617;
+    padding: 10px;
+    color: #38bdf8;
+    text-align: center;
+}
+
+#chat-messages {
+    height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+#chat-input {
+    width: 70%;
+    margin: 5px;
+}
+
+#chatbot-box button {
+    width: 25%;
+}
+
+
         body {
             margin: 0;
             font-family: Arial;
@@ -175,8 +222,102 @@ function checkEmail() {
         });
     });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Toggle chatbot
+    document.getElementById("chatbot-btn").onclick = function () {
+        let box = document.getElementById("chatbot-box");
+
+        if (box.style.display === "flex") {
+            box.style.display = "none";
+        } else {
+            box.style.display = "flex";
+        }
+    };
+
+});
+
+// Send message
+function sendMessage() {
+    let input = document.getElementById("chat-input");
+    let message = input.value;
+
+    let chat = document.getElementById("chat-messages");
+
+    // Show user message
+    chat.innerHTML += "<p><b>You:</b> " + message + "</p>";
+
+    input.value = "";
+
+    // Detect URL in message
+    let urlPattern = /(https?:\/\/[^\s]+)/g;
+    let foundUrl = message.match(urlPattern);
+
+    if (foundUrl) {
+
+        fetch("/check", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({url: foundUrl[0]})
+        })
+        .then(res => res.json())
+        .then(data => {
+
+            chat.innerHTML += `
+                <p><b>Bot:</b> 🔍 URL Analysis</p>
+                <p>Risk Score: ${data.risk_score}</p>
+                <p>AI Confidence: ${data.ml_confidence}%</p>
+            `;
+        });
+
+    } else {
+        let reply = smartReply(message);
+        chat.innerHTML += "<p><b>Bot:</b> " + reply + "</p>";
+    }
+}
+
+
+// Smart bot logic
+function smartReply(msg) {
+    msg = msg.toLowerCase();
+
+    if (msg.includes("phishing")) {
+        return "Phishing is a cyber attack where attackers trick users into giving sensitive data.";
+    }
+
+    if (msg.includes("how to detect")) {
+        return "Check HTTPS, domain age, suspicious words, and unknown links.";
+    }
+
+    if (msg.includes("safe")) {
+        return "Paste a URL here and I will analyze it for you 🔍";
+    }
+
+    if (msg.includes("email")) {
+        return "Use the email checker above to analyze suspicious emails.";
+    }
+
+    if (msg.includes("hello") || msg.includes("hi")) {
+        return "Hello 👋 I am your SPPTI AI assistant!";
+    }
+
+    return "🤖 I am learning... Try asking about phishing or paste a URL.";
+}
+
+
 </script>
 
+<!-- Chatbot Button -->
+<div id="chatbot-btn">💬</div>
+
+<!-- Chatbot Box -->
+<div id="chatbot-box">
+    <div id="chat-header">SPPTI Assistant</div>
+    <div id="chat-messages"></div>
+    <input type="text" id="chat-input" placeholder="Ask something...">
+    <button onclick="sendMessage()">Send</button>
+</div>
 </body>
 </html>
 
