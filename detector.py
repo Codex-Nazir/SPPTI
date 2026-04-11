@@ -1,3 +1,4 @@
+from ml_model import predict_url
 from datetime import datetime
 import whois
 import tldextract

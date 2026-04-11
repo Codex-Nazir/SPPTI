@@ -18,17 +18,17 @@ def check_email(text):
         score += 1
         reasons.append("Contains link")
 
-    # Fake urgency
+    # Urgency phrases
     if "immediately" in text_lower or "action required" in text_lower:
         score += 1
         reasons.append("Creates urgency")
 
-    # Email spoofing signs
+    # Fake sender pattern
     if "@" in text and "." not in text.split("@")[-1]:
         score += 1
         reasons.append("Suspicious email format")
 
-    # FINAL CLASSIFICATION
+    # Final classification
     if score >= 3:
         reasons.append("🚨 High Risk (Phishing)")
     elif score == 2:
@@ -37,4 +37,5 @@ def check_email(text):
         reasons.append("✅ Likely Safe")
 
     return score, reasons
+
 
