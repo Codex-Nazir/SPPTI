@@ -1,26 +1,40 @@
 import re
 
-def check_email(email_text):
+def check_email(text):
     score = 0
     reasons = []
 
+    text_lower = text.lower()
+
     # Suspicious keywords
-    keywords = ["urgent", "verify", "login", "bank", "update", "password"]
-
+    keywords = ["urgent", "verify", "account", "password", "bank", "login"]
     for word in keywords:
-        if word in email_text.lower():
+        if word in text_lower:
             score += 1
-            reasons.append(f"Suspicious keyword found: {word}")
+            reasons.append(f"Contains suspicious word: {word}")
 
-    # Check for links
-    links = re.findall(r'(https?://\S+)', email_text)
-    if links:
+    # Links in email
+    if "http" in text_lower:
         score += 1
-        reasons.append("Email contains links")
+        reasons.append("Contains link")
 
-    # Too many exclamation marks
-    if email_text.count("!") > 3:
+    # Fake urgency
+    if "immediately" in text_lower or "action required" in text_lower:
         score += 1
-        reasons.append("Too many exclamation marks (urgency detected)")
+        reasons.append("Creates urgency")
+
+    # Email spoofing signs
+    if "@" in text and "." not in text.split("@")[-1]:
+        score += 1
+        reasons.append("Suspicious email format")
+
+    # FINAL CLASSIFICATION
+    if score >= 3:
+        reasons.append("🚨 High Risk (Phishing)")
+    elif score == 2:
+        reasons.append("⚠️ Medium Risk")
+    else:
+        reasons.append("✅ Likely Safe")
 
     return score, reasons
+
