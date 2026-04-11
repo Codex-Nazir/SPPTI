@@ -1,3 +1,4 @@
+from database import init_db
 from qr_detector import analyze_qr
 from ml_model import predict_url
 from flask import Flask, request, jsonify, render_template
@@ -6,6 +7,7 @@ from database import save_scan, get_all_scans
 from detector import check_url
 
 app = Flask(__name__)
+init_db()  # very important
 
 # ----------------------------
 # Full manual CORS handling
