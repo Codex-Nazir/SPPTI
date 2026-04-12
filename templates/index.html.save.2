@@ -193,18 +193,16 @@ function checkURL() {
     })
     .then(res => res.json())
     .then(data => {
-
         let resultBox = document.getElementById("url_result");
 
-// ✅ ADD THIS LINE
-resultBox.innerHTML = "⏳ Scanning...";
         if (data.risk_score > 1) {
             resultBox.className = "result danger";
         } else {
             resultBox.className = "result safe";
         }
 
-        resultBox.innerHTML = `
+
+resultBox.innerHTML = `
     <h4>🔍 Analysis Result</h4>
     <p><b>Risk Score:</b> ${data.risk_score}</p>
     <p><b>AI Confidence:</b> ${data.ml_confidence || "N/A"}%</p>
@@ -231,11 +229,7 @@ function checkEmail() {
     })
     .then(res => res.json())
     .then(data => {
-
         let resultBox = document.getElementById("email_result");
-
-// ✅ ADD THIS
-resultBox.innerHTML = "⏳ Scanning...";
 
         if (data.risk_score > 1) {
             resultBox.className = "result danger";
@@ -389,11 +383,8 @@ function checkFile() {
     })
     .then(res => res.json())
     .then(data => {
-
         let box = document.getElementById("file_result");
 
-// ✅ ADD THIS
-box.innerHTML = "⏳ Analyzing file...";
         box.innerHTML = "<b>Type:</b> " + data.type + "<br><b>Risk:</b> " + data.risk;
 
         let list = document.getElementById("file_reasons");
