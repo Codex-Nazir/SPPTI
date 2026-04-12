@@ -3,6 +3,8 @@ from PyPDF2 import PdfReader
 import os
 
 def analyze_file(file_path):
+    print("Processing file:", file_path)  # ✅ inside function
+
     result = {
         "type": "Unknown",
         "risk": "Low",
@@ -20,11 +22,9 @@ def analyze_file(file_path):
             if metadata:
                 result["details"].append("Metadata found in image")
 
-                # suspicious if too much metadata
                 if len(metadata) > 5:
                     result["risk"] = "Medium"
                     result["details"].append("Too much hidden metadata")
-
             else:
                 result["details"].append("No metadata found")
 
@@ -39,12 +39,10 @@ def analyze_file(file_path):
         try:
             reader = PdfReader(file_path)
 
-            # metadata
             meta = reader.metadata
             if meta:
                 result["details"].append("PDF metadata found")
 
-            # check text for suspicious words
             for page in reader.pages:
                 text = page.extract_text()
 
@@ -60,5 +58,5 @@ def analyze_file(file_path):
     else:
         result["details"].append("Unsupported file type")
 
-    return result
+    return result   # ✅ correct indentation
 

@@ -25,15 +25,20 @@ def add_cors_headers(response):
 def upload_file():
     file = request.files["file"]
 
-    filepath = "temp_file"
-    file.save(filepath)
+    filename = file.filename
+    filepath = "temp_" + filename
 
-    result = analyze_file(filepath)
+    try:
+        file.save(filepath)
 
-    os.remove(filepath)
+        result = analyze_file(filepath)
+
+    finally:
+        import os
+        if os.path.exists(filepath):
+            os.remove(filepath)
 
     return jsonify(result)
-
 @app.route("/scan_qr", methods=["POST"])
 def scan_qr():
     file = request.files["file"]
