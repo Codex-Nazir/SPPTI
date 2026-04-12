@@ -131,6 +131,56 @@ button:hover {
     }
 }
 
+.hero {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.hero h1 {
+    font-size: 32px;
+    color: #38bdf8;
+}
+
+.hero p {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #cbd5f5;
+}
+
+.hero-buttons {
+    margin-top: 20px;
+}
+
+.hero button {
+    font-size: 16px;
+    padding: 12px 25px;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+.feature {
+    background: rgba(30, 41, 59, 0.8);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.feature:hover {
+    transform: scale(1.05);
+    background: rgba(56,189,248,0.2);
+}
+
+.feature p {
+    font-size: 13px;
+    color: #cbd5f5;
+}
+
     </style>
 </head>
 
@@ -139,7 +189,41 @@ button:hover {
 <div class="navbar">
     🛡️ SPPTI - Cyber Threat Detection System
 </div>
+<section class="hero">
+    <h1>🛡️ Smart Phishing Protection & Threat Intelligence</h1>
+    <p>
+        Detect phishing URLs, analyze suspicious emails, scan QR codes,
+        and inspect files for hidden threats — all in one place.
+    </p>
 
+    <div class="hero-buttons">
+        <button onclick="scrollToSection()">🚀 Get Started</button>
+    </div>
+</section>
+
+<div class="features">
+
+    <div class="feature">
+        🔗 URL Detection  
+        <p>Analyze suspicious links using AI + rules</p>
+    </div>
+
+    <div class="feature">
+        📧 Email Analysis  
+        <p>Detect phishing emails instantly</p>
+    </div>
+
+    <div class="feature">
+        📷 QR Scanner  
+        <p>Check hidden links inside QR codes</p>
+    </div>
+
+    <div class="feature">
+        📂 File Security  
+        <p>Scan files for hidden threats & metadata</p>
+    </div>
+
+</div>
 <div class="container">
 
     <!-- URL Checker -->
@@ -407,6 +491,11 @@ box.innerHTML = "⏳ Analyzing file...";
     });
 }
 
+function scrollToSection() {
+    document.querySelector(".container").scrollIntoView({
+        behavior: "smooth"
+    });
+}
 
 
 </script>
