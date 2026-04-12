@@ -167,6 +167,15 @@
     <div id="qr_result" class="result"></div>
     <ul id="qr_details"></ul>
 </div>
+<div class="card">
+    <h3>📂 File Security Analyzer</h3>
+    <input type="file" id="fileInput">
+    <button onclick="checkFile()">Analyze File</button>
+
+    <div id="file_result" class="result"></div>
+    <ul id="file_reasons"></ul>
+</div>
+
 </div>
 
 <script>
@@ -342,6 +351,34 @@ function scanQR() {
             <b>Data:</b> ${data.data}
         `;
 
+        list.innerHTML = "";
+
+        data.details.forEach(d => {
+            let li = document.createElement("li");
+            li.innerText = d;
+            list.appendChild(li);
+        });
+    });
+}
+
+function checkFile() {
+    let fileInput = document.getElementById("fileInput");
+    let file = fileInput.files[0];
+
+    let formData = new FormData();
+    formData.append("file", file);
+
+    fetch("/upload_file", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        let box = document.getElementById("file_result");
+
+        box.innerHTML = "<b>Type:</b> " + data.type + "<br><b>Risk:</b> " + data.risk;
+
+        let list = document.getElementById("file_reasons");
         list.innerHTML = "";
 
         data.details.forEach(d => {

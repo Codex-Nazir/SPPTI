@@ -1,3 +1,4 @@
+from file_analyzer import analyze_file
 from database import init_db
 from qr_detector import analyze_qr
 from ml_model import predict_url
@@ -5,6 +6,7 @@ from flask import Flask, request, jsonify, render_template
 from email_detector import check_email
 from database import save_scan, get_all_scans
 from detector import check_url
+import os
 
 app = Flask(__name__)
 init_db()  # very important
@@ -18,6 +20,19 @@ def add_cors_headers(response):
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     return response
+
+@app.route("/upload_file", methods=["POST"])
+def upload_file():
+    file = request.files["file"]
+
+    filepath = "temp_file"
+    file.save(filepath)
+
+    result = analyze_file(filepath)
+
+    os.remove(filepath)
+
+    return jsonify(result)
 
 @app.route("/scan_qr", methods=["POST"])
 def scan_qr():
