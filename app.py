@@ -14,6 +14,18 @@ init_db()  # very important
 # ----------------------------
 # Full manual CORS handling
 # ----------------------------
+@app.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
+
+@app.route("/terms")
+def terms():
+    return render_template("terms.html")
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
 @app.after_request
 def add_cors_headers(response):
     response.headers["Access-Control-Allow-Origin"] = "*"  # allow any origin
