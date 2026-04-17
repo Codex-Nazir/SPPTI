@@ -14,6 +14,9 @@ init_db()  # very important
 # ----------------------------
 # Full manual CORS handling
 # ----------------------------
+@app.route("/about")
+def about():
+    return render_template("about.html")
 @app.route("/phishing")
 def phishing():
     return render_template("phishing.html")
