@@ -396,6 +396,23 @@ SPPTI helps you stay protected by analyzing threats in real-time.
 </div>
 
 <script>
+async function runScan() {
+    const target = document.getElementById("target").value;
+
+    const res = await fetch("https://sppti.onrender.com/api/scan", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ target: target })
+    });
+
+    const data = await res.json();
+
+    document.getElementById("result").innerText = data.result;
+}
+</script>
+<script>
 function checkURL() {
     let url = document.getElementById("url").value;
 
